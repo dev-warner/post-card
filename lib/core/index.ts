@@ -7,7 +7,7 @@ import { screenshot, ScreenshotOptions } from '../screenshot/index.js'
 import { ConfigContainer } from '../config-container/config-container.js'
 
 const DEFAULT_OPTIONS = Object.freeze({
-  concurrency: 20,
+  concurrency: 10,
 })
 
 /**
