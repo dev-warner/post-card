@@ -13,7 +13,7 @@
   "scripts": {
     "start": "rollup -c rollup.config.ts -w",
     "build:lib": "tsc --module commonjs && rollup -c rollup.config.ts",
-    "build:docs": "typedoc --out docs --theme minimal lib/@dev-warner/post-card.ts",
+    "build:docs": "typedoc --out docs --theme minimal lib/post-card.ts",
     "build": "npm run build:lib && npm run build:docs",
     "test": "c8 --check-coverage -r=text -r=lcov -x=lib/template/* ava --serial",
     "test:watch": "ava --serial --watch",

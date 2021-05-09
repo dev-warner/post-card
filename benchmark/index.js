@@ -2,7 +2,7 @@ import fs from 'fs-extra'
 import path from 'path';
 import faker from 'faker';
 
-import { PostCard } from '../dist/@dev-warner/post-card.es.js';
+import { PostCard } from '../dist/ost-card.es.js';
 
 const BASE_PATH = './benchmark/tmp'
 
