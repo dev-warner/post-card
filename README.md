@@ -26,11 +26,11 @@ Simply as [opengraph.xyz](https://www.opengraph.xyz/) describes:
 ## Getting Started
 
 ```bash
-npm i post-card -D
+npm i @dev-warner/post-card -D
 ```
 
 ```typescript
-import { PostCard } from 'post-card'
+import { PostCard } from '@dev-warner/post-card'
 
 class Template {
   options = {

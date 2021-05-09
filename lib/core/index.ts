@@ -56,7 +56,7 @@ export class PostCard {
 
   /**
    *
-   * Good for single use creation of a `post-card`
+   * Good for single use creation of a `@dev-warner/post-card`
    *
    * > **WARNING: Would suggest against using this method if you're creating a lot of cards as it spins up a headless browser and closes for each call**
    *

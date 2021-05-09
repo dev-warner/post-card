@@ -33,7 +33,7 @@ Example:
 
 ### Versions
 
-- post-card: vX.X.X
+- @dev-warner/post-card: vX.X.X
 
 ### Other information
 

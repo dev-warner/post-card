@@ -1,7 +1,7 @@
 {
-  "name": "post-card",
+  "name": "@dev-warner/post-card",
   "version": "0.0.0-development",
-  "description": "post-card is a small node library for generating OpenGraph images for social media sharing.",
+  "description": "@dev-warner/post-card is a small node library for generating OpenGraph images for social media sharing.",
   "license": "MIT",
   "typings": "dist/types/index.d.ts",
   "main": "dist/post-card.cdj.js",
@@ -13,7 +13,7 @@
   "scripts": {
     "start": "rollup -c rollup.config.ts -w",
     "build:lib": "tsc --module commonjs && rollup -c rollup.config.ts",
-    "build:docs": "typedoc --out docs --theme minimal lib/post-card.ts",
+    "build:docs": "typedoc --out docs --theme minimal lib/@dev-warner/post-card.ts",
     "build": "npm run build:lib && npm run build:docs",
     "test": "c8 --check-coverage -r=text -r=lcov -x=lib/template/* ava --serial",
     "test:watch": "ava --serial --watch",
@@ -130,6 +130,6 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/dev-warner/post-card.git"
+    "url": "https://github.com/dev-warner/@dev-warner/post-card.git"
   }
 }
