@@ -1,5 +1,6 @@
 # post-card
 
+[![test](https://github.com/dev-warner/post-card/actions/workflows/test.yml/badge.svg)](https://github.com/dev-warner/post-card/actions/workflows/test.yml)
 [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.0-4baaaa.svg)](code_of_conduct.md)
 
 `PostCard` is a small node library for generating OpenGraph images for social media sharing.
