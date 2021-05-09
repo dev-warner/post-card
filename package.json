@@ -1,0 +1,88 @@
+{
+  "name": "post-card",
+  "version": "0.0.1",
+  "description": "post-card is a small node library for generating OpenGraph images for social media sharing.",
+  "license": "MIT",
+  "typings": "dist/types/index.d.ts",
+  "main": "dist/post-card.cdj.js",
+  "module": "dist/post-card.es.js",
+  "type": "module",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "start": "rollup -c rollup.config.ts -w",
+    "build": "tsc --module commonjs && rollup -c rollup.config.ts && typedoc --out docs --theme minimal lib/post-card.ts",
+    "test": "c8 --check-coverage -r=text -r=lcov -x=lib/template/* ava --serial",
+    "test:watch": "ava --serial --watch",
+    "benchmark": "node ./benchmark/index.js",
+    "lint": "tslint  --project tsconfig.json -t codeFrame 'lib/**/*.ts' 'test/**/*.ts'",
+    "semantic-release": "semantic-release",
+    "precommit": "lint-staged",
+    "prebuild": "rimraf dist docs",
+    "pretest": "rimraf coverage"
+  },
+  "keywords": [
+    "open-graph",
+    "social-media",
+    "nodejs"
+  ],
+  "author": "dev-warner",
+  "prettier": {
+    "semi": false,
+    "singleQuote": true
+  },
+  "lint-staged": {
+    "{lib,test}/**/*.ts": [
+      "prettier --write",
+      "git add"
+    ]
+  },
+  "ava": {
+    "files": [
+      "tests/unit/**/*"
+    ],
+    "extensions": {
+      "ts": "module"
+    },
+    "nodeArguments": [
+      "--loader=ts-node/esm"
+    ]
+  },
+  "dependencies": {
+    "@supercharge/promise-pool": "^1.7.0",
+    "capture-website": "^1.4.0",
+    "fs-extra": "^9.1.0"
+  },
+  "devDependencies": {
+    "@ava/typescript": "^1.1.1",
+    "@types/benchmark": "^2.1.0",
+    "@types/fs-extra": "^9.0.11",
+    "@types/node": "^15.0.1",
+    "@types/proxyquire": "^1.3.28",
+    "@types/puppeteer": "^5.4.3",
+    "@types/sinon": "^10.0.0",
+    "ava": "^4.0.0-alpha.2",
+    "benchmark": "^2.1.4",
+    "c8": "^7.7.2",
+    "faker": "^5.5.3",
+    "prettier": "^2.2.1",
+    "rimraf": "^3.0.2",
+    "rollup": "^2.46.0",
+    "rollup-plugin-commonjs": "^10.1.0",
+    "rollup-plugin-json": "^4.0.0",
+    "rollup-plugin-node-resolve": "^5.2.0",
+    "rollup-plugin-sourcemaps": "^0.6.3",
+    "rollup-plugin-typescript2": "^0.30.0",
+    "rollup-plugin-uglify": "^6.0.4",
+    "semantic-release": "^17.4.2",
+    "sinon": "^10.0.0",
+    "source-map-support": "^0.5.19",
+    "ts-node": "^9.1.1",
+    "tslint": "^6.1.3",
+    "tslint-config-prettier": "^1.18.0",
+    "tslint-config-standard": "^9.0.0",
+    "typedoc": "^0.20.36",
+    "typescript": "^4.2.4"
+  }
+}
