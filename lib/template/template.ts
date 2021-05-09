@@ -5,6 +5,6 @@ export abstract class Template {
   options?: ScreenshotOptions = {}
 
   abstract render<T = Record<string, any>>(
-    data: ICardModel & T
+    data: ICardModel<T>
   ): Promise<string> | string
 }

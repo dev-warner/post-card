@@ -1,0 +1,15 @@
+node_modules
+coverage
+.DS_Store
+*.log
+.vscode
+.idea
+lib
+tests
+tsconfig.json
+tslint.json
+rollup.config.ts
+TODO.md
+docs
+.env
+benchmark
