@@ -11,7 +11,12 @@ const DEFAULT_OPTIONS = Object.freeze({
 })
 
 /**
+ * Item Model for creating cards
  *
+ * @param output - [Requried]: needed for a location to save your image.
+ * @param data - [Required]: the data needed for your template, check the template you're using for information needed here
+ * @param options - [Optional]: Options for configuring caputre settings,
+ * @param templateOveride - [Optional]: Can be used to swap out a template for an item
  */
 export interface ICardModel<DataModel = Record<string, any>> {
   output: string
@@ -22,10 +27,32 @@ export interface ICardModel<DataModel = Record<string, any>> {
 
 export class PostCard {
   /**
+   * Perfect for SSG usage as at build time you can create Open graph images for each Post/Page
    *
-   * @param template
-   * @param items
-   * @param options
+   * > **WARNING: When batching lots of items it will take alot of time, and on CI machines can use a fair amount of RAM use the `options.concurrency` to configure to your needs**
+   *
+   * ```typescript
+   * import { PostCard } from '@dev-warner/post-card'
+   *
+   * await PostCard.batch<{ title: string }>(Template, [
+   *    {
+   *      output: 'media/home-page.png',
+   *      data: {
+   *        title: 'Home Page Fun'
+   *     }
+   *   },
+   *   {
+   *      output: 'media/about-page.png',
+   *     data: {
+   *        title: 'About me'
+   *      }
+   *   }
+   *  ],
+   *  {
+   *    ... options
+   *  }
+   * )
+   * ```
    */
   static async batch<DataModel = Record<string, any>>(
     template: Template,

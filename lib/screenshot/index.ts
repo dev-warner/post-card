@@ -9,28 +9,23 @@ const DEFAULT_OPTIONS = Object.freeze({
 })
 
 /**
+ * Options for configuring the screenshot options, including browser and page options.
  *
+ * refer here: [https://github.com/sindresorhus/capture-website#options]
  */
+export type ScreenshotOptions = capture.Options
+
+export type ScreenshotPrivate = ScreenshotOptions & {
+  _keepAlive?: boolean
+  _browser?: undefined | puppeteer.Browser
+}
+
 export interface IScreenshot {
   html: string
   output: string
   options: ScreenshotOptions
 }
 
-/**
- *
- */
-export type ScreenshotOptions = capture.Options
-export type ScreenshotPrivate = ScreenshotOptions & {
-  _keepAlive?: boolean
-  _browser?: undefined | puppeteer.Browser
-}
-
-/**
- *
- * @param param0
- * @returns
- */
 export async function screenshot({ html, output, options = {} }: IScreenshot) {
   const isRemote = isURL(html)
 
