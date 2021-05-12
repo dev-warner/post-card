@@ -41,7 +41,7 @@ Example:
 
 ### Versions
 
-- @dev-warner/post-card: vX.X.X
+- @post-cards/core: vX.X.X
 
 ### Other information
 
