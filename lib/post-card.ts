@@ -1,3 +1,8 @@
-export * from './core/index.js'
-export * from './screenshot/index.js'
-export * from './template/template.js'
+import { generate } from './generate.js'
+
+export * from './batch.js'
+export * from './create.js'
+export * from './template.js'
+export * from './card.js'
+
+export default generate

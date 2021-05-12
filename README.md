@@ -1,9 +1,9 @@
-# post-card 📬
+# post-cards 📬
 
 [![Coverage Status](https://coveralls.io/repos/github/dev-warner/post-card/badge.svg?branch=main)](https://coveralls.io/github/dev-warner/post-card?branch=main)
 [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.0-4baaaa.svg)](code_of_conduct.md)
 
-`@dev-warner/post-card` is a small node library for generating OpenGraph images for social media sharing. 📬
+`@post-cards/core` is a small node library for generating OpenGraph images for social media sharing. 📬
 
 - [Templates](https://github.com/dev-warner/post-card-templates)
 - [Documentation](https://dev-warner.github.io/post-card/)
@@ -26,29 +26,19 @@ Simply as [opengraph.xyz](https://www.opengraph.xyz/) describes:
 ## Getting Started
 
 ```bash
-npm i @dev-warner/post-card -D
+npm i @post-cards/core -D
 ```
 
 ```typescript
-import { PostCard } from '@dev-warner/post-card'
+import generate from '@post-cards/core'
+import BasicTemplate from '@post-cards/templates'
 
-class Template {
-  options = {
-    styles: [
-      `
-       h1 {
-        color: red;
-       }
-      `,
-    ],
-  }
-  render(item) {
-    return `<h1>${item.data.title}</h1>`
-  }
-}
-
-await PostCard.batch<{ title: string }>(
-  Template,
+await generate(
+  new BasicTemplate({
+    text: '#fff',
+    background: '#000',
+    accent: 'orange',
+  }),
   [
     {
       output: 'media/home-page.png',
@@ -70,100 +60,12 @@ await PostCard.batch<{ title: string }>(
 )
 ```
 
-## Create
-
-Good for single use creation of a `Card`
-
-> **WARNING: Would suggest against using this method if you're creating a lot of cards as it spins up a headless browser and closes for each call**
-
-```typescript
-await PostCard.create<{ title: string }>(
-  Template,
-  {
-    output: 'media/home-page.png',
-    data: {
-      title: 'My great HomePage',
-    },
-  },
-  {
-    ...options,
-  }
-)
-```
-
-## Batch
-
-Perfect for SSG usage as at build time you can create Open graph images for each Post/Page
-
-> **WARNING: When batching lots of items it will take alot of time, and on CI machines can use a fair amount of RAM use the `options.concurrency` to configure to your needs**
-
-```typescript
-await PostCard.batch<{ title: string }>(
-  Template,
-  [
-    {
-      output: 'media/home-page.png',
-      data: {
-        title: 'My great HomePage',
-      },
-    },
-  ],
-  {
-    concurrency: 10,
-    ...options,
-  }
-)
-```
-
-## Configuration
-
-### Styles
-
-styles can come from three places. the template, the item and from the top level call. they get added in this level of importance.
-
--> root -> template -> item
-
-```typescript
-class Template {
-  options = {
-    styles: [`h1 { color: blue}`],
-  }
-}
-await PostCard.create(
-  Template,
-  {
-    output: '.tmp/image.jpg',
-    data: {
-      title: 'Hello World',
-      options: { styles: [` h1 { color: green}`] },
-    },
-  },
-  {
-    styles: [`h1 { color: red }`],
-  }
-)
-```
-
-the output of `options.styles` sent to the browser will be
-
-```css
-h1 {
-  color: red;
-}
-h1 {
-  color: blue;
-}
-h1 {
-  color: green;
-}
-```
-
 ### Template override
 
 Sometimes you might not want the same template for each item but still want to batch them together.
 
 ```typescript
-await PostCard.batch(Template, [
+await generate(Template, [
   { output: 'media/first-image.jpg', data: {} },
   {
     output: 'media/second-image.jpg',
@@ -175,50 +77,9 @@ await PostCard.batch(Template, [
 
 ## Creating Templates
 
-Creating template is an easy process, by creating a class with a render function which returns a string which can also be a promise you can create your template any way you'd like.
+Creating template is an easy process, by creating a class with a render function which returns a buffer which can also be a promise you can create your template any way you'd like.
 
 For more information: [Templates](https://github.com/dev-warner/post-card-templates)
-
-### Basic Example using EJS
-
-```typescript
-import ejs from 'ejs'
-
-class BasicTemplate {
-  options = {
-    styles: [`h1 { color: red}`],
-  }
-  render(item) {
-    return ejs.render(`<h1><%= title %></h1>`, item.data)
-  }
-}
-```
-
-### Images and Fonts
-
-Because we're loading a browser it won't have access to your local images/fonts but there is a work around, which is to convert your images and fonts to base64 which i've provided a helper.
-
-```js
-import { Local } from '@dev-warner/post-card-templates'
-
-class Template {
-  options = {
-    styles: [
-      `
-        html {
-          font-family: url(${Local.font('./fonts/my-font.tff')});
-        }
-      `,
-    ],
-  }
-  render(item) {
-    return `
-      <h1>${item.data.title}</h1>
-      <img src="${Local.image(item.data.image)}" />
-    `
-  }
-}
-```
 
 ## Contributting Guide
 

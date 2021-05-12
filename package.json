@@ -1,7 +1,7 @@
 {
-  "name": "@dev-warner/post-card",
+  "name": "@post-cards/core",
   "version": "0.0.0-development",
-  "description": "@dev-warner/post-card is a small node library for generating OpenGraph images for social media sharing.",
+  "description": "@post-cards/core is a small node library for generating OpenGraph images for social media sharing.",
   "license": "MIT",
   "typings": "dist/types/index.d.ts",
   "main": "dist/post-card.cdj.js",
@@ -16,7 +16,7 @@
     "build:lib": "tsc --module commonjs && rollup -c rollup.config.ts",
     "build:docs": "typedoc --out docs --theme minimal lib/post-card.ts",
     "build": "npm run build:lib && npm run build:docs",
-    "test": "c8 --check-coverage -r=text -r=lcov -x=lib/template/* ava --serial",
+    "test": "c8 --check-coverage -r=text -r=lcov -x=tests ava --serial",
     "test:watch": "ava --serial --watch",
     "benchmark:latest": "npm run build:lib && npm run benchmark",
     "benchmark": "node ./benchmark/index.js",
@@ -89,21 +89,18 @@
   },
   "dependencies": {
     "@supercharge/promise-pool": "^1.7.0",
-    "capture-website": "^1.4.0",
     "fs-extra": "^9.1.0"
   },
   "devDependencies": {
     "@ava/typescript": "^1.1.1",
     "@commitlint/cli": "^12.1.1",
     "@commitlint/config-conventional": "^12.1.1",
-    "@types/benchmark": "^2.1.0",
     "@types/fs-extra": "^9.0.11",
     "@types/node": "^15.0.1",
-    "@types/puppeteer": "^5.4.3",
     "@types/sinon": "^10.0.0",
     "ava": "^4.0.0-alpha.2",
-    "benchmark": "^2.1.4",
     "c8": "^7.7.2",
+    "canvas": "^2.7.0",
     "coveralls": "^3.1.0",
     "cz-conventional-changelog": "^3.3.0",
     "faker": "^5.5.3",
@@ -131,6 +128,6 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/dev-warner/post-card.git"
+    "url": "https://github.com/dev-warner/post-cards.git"
   }
 }

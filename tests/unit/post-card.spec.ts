@@ -1,23 +1,15 @@
 import path from 'path'
-import fs from 'fs-extra'
 import test from 'ava'
-import capture from 'capture-website'
-import { PostCard } from '../../lib/post-card.js'
+import fs from 'fs-extra'
 
 import sinon, { SinonSandbox } from 'sinon'
 
+import generate from '../../lib/post-card.js'
+import { logger } from '../../lib/logger.js'
+
 class MockTemplate {
-  options = {
-    styles: [
-      `
-        h1 {
-            color: red;
-        }
-      `,
-    ],
-  }
   render(item: any) {
-    return `<h1>hello ${item.data.name}</h1>`
+    return Buffer.from([])
   }
 }
 
@@ -36,11 +28,7 @@ test('should create images', async (t) => {
     .stub(fs, 'outputFile')
     .returns(await Promise.resolve())
 
-  const buffer = sandbox
-    .stub(capture, 'buffer')
-    .returns(Promise.resolve(Buffer.from([])))
-
-  await PostCard.batch(new MockTemplate(), [
+  await generate(new MockTemplate(), [
     {
       output: '.tmp/test-image-1.jpg',
       data: {
@@ -55,70 +43,24 @@ test('should create images', async (t) => {
     },
   ])
 
-  const firstFileCall = buffer.getCall(0).args
-  // @ts-ignore-next-line
-  const { _browser, ...firstConfig } = firstFileCall[1]
+  sinon.assert.calledTwice(outputFile)
 
-  t.deepEqual(firstFileCall[0], `<h1>hello Joe Warner 1</h1>`)
-  t.deepEqual(firstConfig as any, {
-    _keepAlive: true,
-    concurrency: 10,
-    height: 630,
-    inputType: 'html',
-    styles: [
-      `
-        h1 {
-            color: red;
-        }
-      `,
-    ],
-    hideElements: [],
-    modules: [],
-    removeElements: [],
-    scripts: [],
-    width: 1200,
-  })
+  const {
+    args: [_path, buffer, options],
+  } = outputFile.getCall(0) as any
 
-  const secondFileCall = buffer.getCall(1).args
-  // @ts-ignore-next-line
-  const { _browser: browser2, ...secondConfig } = secondFileCall[1]
-  t.deepEqual(secondFileCall[0], `<h1>hello Joe Warner 2</h1>`)
-  t.deepEqual(secondConfig as any, {
-    _keepAlive: true,
-    concurrency: 10,
-    height: 630,
-    inputType: 'html',
-    styles: [
-      `
-        h1 {
-            color: red;
-        }
-      `,
-    ],
-    hideElements: [],
-    modules: [],
-    removeElements: [],
-    scripts: [],
-    width: 1200,
-  })
+  t.is(_path, path.join(process.cwd(), '.tmp/test-image-1.jpg'))
+  t.deepEqual(buffer, Buffer.from([]))
+  t.deepEqual(options, { encoding: 'utf-8' })
 
-  // @ts-ignore-next-line
-  t.deepEqual(outputFile.getCall(0).args, [
-    path.join(process.cwd(), '.tmp/test-image-1.jpg'),
-    Buffer.from([]),
-    {
-      encoding: 'utf-8',
-    },
-  ])
+  const args2 = outputFile.getCall(1) as any
+  const {
+    args: [path2, buffer2, options2],
+  } = outputFile.getCall(1) as any
 
-  // @ts-ignore-next-line
-  t.deepEqual(outputFile.getCall(1).args, [
-    path.join(process.cwd(), '.tmp/test-image-3.jpg'),
-    Buffer.from([]),
-    {
-      encoding: 'utf-8',
-    },
-  ])
+  t.is(path2, path.join(process.cwd(), '.tmp/test-image-3.jpg'))
+  t.deepEqual(buffer2, Buffer.from([]))
+  t.deepEqual(options2, { encoding: 'utf-8' })
 })
 
 test('should create image', async (t) => {
@@ -126,48 +68,55 @@ test('should create image', async (t) => {
     .stub(fs, 'outputFile')
     .returns(await Promise.resolve())
 
-  const buffer = sandbox
-    .stub(capture, 'buffer')
-    .returns(Promise.resolve(Buffer.from([])))
-
-  await PostCard.create(new MockTemplate(), {
+  await generate(new MockTemplate(), {
     output: '.tmp/test-image-2.jpg',
     data: {
       name: 'Joe Warner',
     },
   })
 
-  // @ts-ignore-next-line
-  t.deepEqual(outputFile.getCall(0).args, [
-    path.join(process.cwd(), '.tmp/test-image-2.jpg'),
-    Buffer.from([]),
+  sinon.assert.calledOnce(outputFile)
+
+  const {
+    args: [_path, buffer, options],
+  } = outputFile.getCall(0) as any
+
+  t.is(_path, path.join(process.cwd(), '.tmp/test-image-2.jpg'))
+  t.deepEqual(buffer, Buffer.from([]))
+  t.deepEqual(options, { encoding: 'utf-8' })
+})
+
+test('should log success if verbose true', async (t) => {
+  const sucess = sandbox.stub(logger, 'success')
+  const outputFile = sandbox
+    .stub(fs, 'outputFile')
+    .returns(await Promise.resolve())
+
+  await generate(
+    new MockTemplate(),
     {
-      encoding: 'utf-8',
+      output: '.tmp/test-image-2.jpg',
+      data: {
+        name: 'Joe Warner',
+      },
     },
-  ])
+    { verbose: true }
+  )
 
-  const firstFileCall = buffer.getCall(0).args
-  // @ts-ignore-next-line
-  const { _browser, ...firstConfig } = firstFileCall[1]
+  sinon.assert.calledOnce(outputFile)
 
-  t.deepEqual(firstFileCall[0], `<h1>hello Joe Warner</h1>`)
-  t.deepEqual(firstConfig as any, {
-    _keepAlive: false,
-    height: 630,
-    inputType: 'html',
-    styles: [
-      `
-        h1 {
-            color: red;
-        }
-      `,
-    ],
-    hideElements: [],
-    modules: [],
-    removeElements: [],
-    scripts: [],
-    width: 1200,
-  })
+  const {
+    args: [_path, buffer, options],
+  } = outputFile.getCall(0) as any
+
+  t.is(_path, path.join(process.cwd(), '.tmp/test-image-2.jpg'))
+  t.deepEqual(buffer, Buffer.from([]))
+  t.deepEqual(options, { encoding: 'utf-8' })
+
+  sinon.assert.calledWith(
+    sucess,
+    `Created: ${path.join(process.cwd(), '.tmp/test-image-2.jpg')}`
+  )
 })
 
 test('Should return error if failed', async (t) => {
@@ -176,11 +125,9 @@ test('Should return error if failed', async (t) => {
     .returns(await Promise.resolve())
     .throws(() => new Error('Somethings gone wrong.'))
 
-  sandbox.stub(capture, 'buffer').returns(Promise.resolve(Buffer.from([])))
-
   const error = await t.throwsAsync(
     () =>
-      PostCard.batch(new MockTemplate(), [
+      generate(new MockTemplate(), [
         {
           output: '.tmp/test-image-1.jpg',
           data: {
@@ -200,21 +147,64 @@ test('Should return error if failed', async (t) => {
   t.is(error.message, 'Somethings gone wrong.')
 })
 
-test('should set capture to remote if render returns url', async (t) => {
-  sandbox.stub(fs, 'outputFile').returns(await Promise.resolve())
-  const buffer = sandbox
-    .stub(capture, 'buffer')
-    .returns(Promise.resolve(Buffer.from([])))
+test('Should log error if verbose true', async (t) => {
+  sandbox
+    .stub(fs, 'outputFile')
+    .returns(await Promise.resolve())
+    .throws(() => new Error('Somethings gone wrong.'))
 
-  await PostCard.create(
-    { render: () => 'https://google.com' },
-    {
-      output: '.tmp/test-image-1.jpg',
-      data: {
-        name: 'Joe Warner 1',
-      },
-    }
+  const errorLog = sandbox.stub(logger, 'error')
+  const info = sandbox.stub(logger, 'info')
+
+  const error = await t.throwsAsync(
+    () =>
+      generate(
+        new MockTemplate(),
+        [
+          {
+            output: '.tmp/test-image-1.jpg',
+            data: {
+              name: 'Joe Warner 1',
+            },
+          },
+          {
+            output: '.tmp/test-image-3.jpg',
+            data: {
+              name: 'Joe Warner 2',
+            },
+          },
+        ],
+        { verbose: true }
+      ),
+    { message: 'Somethings gone wrong.' }
   )
 
-  t.deepEqual((buffer.getCall(0).args[1] as any).inputType as string, 'url')
+  sinon.assert.calledWith(info, 'Creating: 2')
+
+  t.is(error.message, 'Somethings gone wrong.')
+
+  sinon.assert.calledWith(
+    errorLog,
+    `Failed to create: ${path.join(process.cwd(), '.tmp/test-image-1.jpg')}`
+  )
+  sinon.assert.calledWith(
+    errorLog,
+    `Failed to create: ${path.join(process.cwd(), '.tmp/test-image-3.jpg')}`
+  )
+})
+
+test('logger', (t) => {
+  const log = sinon.stub(console, 'log')
+  const info = sinon.stub(console, 'info')
+  const error = sinon.stub(console, 'error')
+
+  logger.info('hello')
+  logger.success('hello')
+  logger.error('hello')
+
+  sinon.assert.calledWith(log, `@post-card/core: ✅ hello`)
+  sinon.assert.calledWith(info, `@post-card/core: ℹ️ hello`)
+  sinon.assert.calledWith(error, `@post-card/core: ❌ hello`)
+
+  t.pass()
 })
