@@ -2,13 +2,40 @@ import fs from 'fs-extra'
 import path from 'path';
 import faker from 'faker';
 
-import { PostCard } from '../dist/ost-card.es.js';
+import canvasNode from 'canvas';
+import generate from '../dist/post-card.es.js';
 
 const BASE_PATH = './benchmark/tmp'
 
 class Template {
     render(item) {
-        return `<h1>${item.data.name}</h1>`
+        const width = 1200
+        const height = 630
+
+        const canvas = canvasNode.createCanvas(width, height)
+        const context = canvas.getContext('2d')
+
+        context.fillStyle = '#000'
+        context.fillRect(0, 0, width, height)
+
+        context.font = 'bold 70pt Menlo'
+        context.textAlign = 'center'
+        context.textBaseline = 'top'
+        context.fillStyle = '#3574d4'
+
+        const text = item.data.name
+
+        const textWidth = context.measureText(text).width
+
+        context.fillRect(600 - textWidth / 2 - 10, 170 - 5, textWidth + 20, 120)
+        context.fillStyle = '#fff'
+        context.fillText(text, 600, 170)
+
+        context.fillStyle = '#fff'
+        context.font = 'bold 30pt Menlo'
+        context.fillText('dev-warner.io', 600, 530)
+
+        return canvas.toBuffer()
     }
 }
 
@@ -22,13 +49,19 @@ async function benchmark(name, length) {
 
     console.log(`Starting test: ${name} items: ${length}`)
     console.time(name);
-    await PostCard.batch(new Template(), LOTS_OF_NAMES)
+
+    await generate(new Template(), LOTS_OF_NAMES, { concurrency: 100, verbose: true })
+
     console.timeEnd(name)
 
     fs.removeSync(path.join(process.cwd(), BASE_PATH))
 }
 
 process.on('exit', () => {
+    fs.removeSync(path.join(process.cwd(), BASE_PATH))
+})
+
+process.on('beforeExit', () => {
     fs.removeSync(path.join(process.cwd(), BASE_PATH))
 })
 

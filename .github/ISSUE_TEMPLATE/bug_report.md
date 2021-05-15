@@ -1,3 +1,11 @@
+---
+name: Bug report
+about: Create a report to help us improve
+title: ''
+labels: ''
+assignees: ''
+---
+
 ### Description
 
 <!-- Example: Could not subscribe to updates when...  -->
@@ -33,7 +41,7 @@ Example:
 
 ### Versions
 
-- @dev-warner/post-card: vX.X.X
+- @post-cards/core: vX.X.X
 
 ### Other information
 
