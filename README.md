@@ -18,7 +18,7 @@
 
 Simply as [opengraph.xyz](https://www.opengraph.xyz/) describes:
 
-> Social networks and messaging apps use theOpen Graph meta tags to display your website.
+> Social networks and messaging apps use the Open Graph meta tags to display your website.
 
 - [Open Graph documentation](https://ogp.me/)
 - [Open Graph card validator](https://www.opengraph.xyz/)
@@ -31,7 +31,7 @@ npm i @post-cards/core -D
 
 ```typescript
 import generate from '@post-cards/core'
-import BasicTemplate from '@post-cards/templates'
+import BasicTemplate from '@post-cards/basic-template'
 
 await generate(
   new BasicTemplate({
@@ -77,7 +77,7 @@ await generate(Template, [
 
 ## Creating Templates
 
-Creating template is an easy process, by creating a class with a render function which returns a buffer which can also be a promise you can create your template any way you'd like.
+Creating template is an easy process, if you've ever worked with html canvas, creating templates should be a breeze, and we provide some utils to smooth out the process.
 
 For more information: [Templates](https://github.com/dev-warner/post-card-templates)
 

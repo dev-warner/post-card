@@ -11,17 +11,19 @@ const DEFAULT_OPTIONS = Object.freeze<BatchOptions>({
 })
 
 export type BatchOptions = {
+  /** maximum amount of items created at once */
   concurrency: number
+  /** logging of information */
   verbose: boolean
 }
 
 /**
- * Perfect for SSG usage as at build time you can create Open graph images for each Post/Page
+ * create many images using the specified template
  *
  * ```typescript
- * import { PostCard } from '@post-cards/core'
+ * import generate from '@post-cards/core'
  *
- * await PostCard.batch<{ title: string }>(Template, [
+ * await generate<{ title: string }>(Template, [
  *    {
  *      output: 'media/home-page.png',
  *      data: {

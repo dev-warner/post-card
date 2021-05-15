@@ -1,12 +1,13 @@
 import path from 'path'
 
 import { save } from './save.js'
+import { logger } from './logger.js'
 
 import type { Template } from './template.js'
 import type { ICardModel } from './card.js'
-import { logger } from './logger.js'
 
 export type CreateOptions = {
+  /** logging of information */
   verbose?: boolean
 }
 
@@ -16,10 +17,12 @@ const DEFAULT_OPTIONS = Object.freeze<CreateOptions>({
 
 /**
  *
- * Good for single use creation of a `@post-cards/core`
+ * create a image using the specified template.
  *
  * ```typescript
- * await create<{ title: string }>(
+ * import generate from '@post-cards/core'
+ *
+ * await generate<{ title: string }>(
  *  Template,
  *  {
  *   output: 'media/home-page.png',

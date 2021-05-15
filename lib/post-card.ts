@@ -6,3 +6,4 @@ export * from './template.js'
 export * from './card.js'
 
 export default generate
+export { generate }
