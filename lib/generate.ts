@@ -6,7 +6,7 @@ import { batch, BatchOptions } from './batch.js'
 import { create, CreateOptions } from './create.js'
 
 /**
- * Perfect for SSG usage as at build time you can create Open graph images for each Post/Page
+ * create many images using the specified template
  *
  * ```typescript
  * import generate from '@post-cards/core'
@@ -39,7 +39,7 @@ export function generate<DataModel = Record<string, any>>(
 
 /**
  *
- * Good for single use creation of a `@post-cards/core`
+ * create a image using the specified template.
  *
  * ```typescript
  * import generate from '@post-cards/core'
