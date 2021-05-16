@@ -3,7 +3,7 @@
   "version": "0.0.0-development",
   "description": "@post-cards/core is a small node library for generating OpenGraph images for social media sharing.",
   "license": "MIT",
-  "typings": "dist/types/index.d.ts",
+  "typings": "dist/types/post-card.d.ts",
   "main": "dist/post-card.cdj.js",
   "module": "dist/post-card.es.js",
   "type": "module",
